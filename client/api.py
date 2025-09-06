@@ -64,15 +64,12 @@ def set_clipboard_content_for_all_devices():
     response = requests.post(f"{API_URL}/shared_clipboard/set", json=data, headers=headers)
     return response.json()
 
-def sync():
+def sync() -> str:
     headers = {
         'accept': 'application/json'
     }
     response = requests.get(f"{API_URL}/shared_clipboard/sync", headers=headers)
-    if response.status_code == 200:
-        content = response.json()['data']['content']
-        clipboard_instance.set_clipboard_content(content)
-    return response.json()
+    return response.json()['data']['content']
 
 def health_check():
     headers = {
