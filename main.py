@@ -6,6 +6,51 @@ import time
 import threading
 import os
 import sys
+from blessed import Terminal
+from contextlib import contextmanager
+from typing import Generator
+from dashing import HSplit, VSplit, Text, Log
+
+class TerminalUI:
+
+    def __init__(self):
+        self.term = Terminal()
+        self.running = True
+        self.ui = self.start()
+        self.log = self.ui.items[0].items[2]
+
+
+    def start(self):
+
+        ui = HSplit(
+            VSplit(
+                Text("Shared Clipboard Client", color=2),
+                Log(title='Menu', border_color=5, color=7),
+                Log(title='Log', border_color=3, color=7)
+            ),
+            title="Shared Clipboard Manager",
+        )
+
+        return ui
+
+    def log_input(self, message:str):
+        self.log.append(message)
+        return
+
+    def run(self):
+        with self.term.fullscreen(), self.term.hidden_cursor(), self.term.cbreak():
+            while self.running:
+                self.ui.display()
+
+                val = self.term.inkey(timeout=0.1)
+                if val.lower() == 'q':
+                    self.running = False
+                    break
+                elif val:
+                    self.log_input(f"Pressed: {val.lower()}")
+
+
+
 
 class ClipboardApp:
     def __init__(self):
@@ -118,7 +163,7 @@ class ClipboardApp:
         print(f"Result: {result}")
         input("\nPress Enter to continue...")
         
-    def run(self):
+    def run(self, ui):
         self.running = True
         
         # Start sync thread
@@ -136,7 +181,7 @@ class ClipboardApp:
             self.display_status()
             self.display_clipboard_content()
             self.display_menu()
-            
+            self.running = ui.running
             try:
                 choice = input("\nEnter your choice: ").strip()
                 
@@ -177,9 +222,16 @@ def main():
         create_response = create_shared_clipboard()
         print(f"Connection established: {create_response}")
         
+        # Initialize terminal UI
+        ui = TerminalUI()
+        ui.log_input("Terminal UI initialized.")
+        ui.run()
+
         # Start the application
         app = ClipboardApp()
-        app.run()
+        app.run(ui)
+
+        
         
     except Exception as e:
         print(f"Failed to start application: {str(e)}")
