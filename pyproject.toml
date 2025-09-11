@@ -1,7 +1,7 @@
 [project]
 name = "shared-clipboard-client"
-version = "0.1.0"
-description = "Add your description here"
+version = "0.1.1"
+description = "shared-cilpboard-client is a command-line tool that allows you to share your clipboard content across multiple devices using a shared clipboard server."
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
