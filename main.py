@@ -5,8 +5,8 @@ import time
 import threading
 import sys
 from blessed import Terminal
-from dashing import HSplit, VSplit, Text, Log
-
+# from dashing import HSplit, VSplit, Text, Log
+from dashboard import HSplit, VSplit, Text, Log
 class TerminalUI:
 
     def __init__(self, app):
