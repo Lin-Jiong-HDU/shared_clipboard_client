@@ -1,14 +1,10 @@
 from client.clipboard import clipboard_instance
-from client.api import create_shared_clipboard, delete_shared_clipboard, get_devices_count, health_check, sync, set_clipboard_content_for_all_devices
+from client.api import create_shared_clipboard, delete_shared_clipboard, get_devices_count, health_check
 from client.sync import push_clipboard_content, sync_clipboard_content
-import pyperclip
 import time
 import threading
-import os
 import sys
 from blessed import Terminal
-from contextlib import contextmanager
-from typing import Generator
 from dashing import HSplit, VSplit, Text, Log
 
 class TerminalUI:
@@ -22,6 +18,7 @@ class TerminalUI:
         self.status_text = self.ui.items[0].items[0]
         self.clipboard_text = self.ui.items[0].items[1]
         self.menu_text = self.ui.items[1].items[0]
+        self.term_height, self.term_width = self.term.height, self.term.width
 
         # Initialize UI content
         self.update_display()
@@ -29,12 +26,12 @@ class TerminalUI:
     def start(self):
         ui = HSplit(
             VSplit(
-                Text("Status", color=2),
-                Text("Clipboard Content", color=2),
+                Text("Status", color=2, border_color=4),
+                Log(title= 'Clipboard Content', color=2, border_color=4),
                 Log(title='Menu', border_color=5, color=7)
             ),
             VSplit(
-                Text("Connection Info", color=2),
+                Text("Connection Info", color=2, border_color=4),
                 Log(title='Activity Log', border_color=3, color=7)
             ),
             title="Shared Clipboard Manager",
@@ -61,11 +58,14 @@ class TerminalUI:
 
         # Update clipboard content
         content = self.app.clipboard_instance.get_clipboard_content()
-        if len(content) > 200:
-            display_content = f"{content[:200]}...\n\n[Length: {len(content)} chars]"
+        if len(content) > self.term_width // 2:
+            display_content = f"{content[:self.term_width // 2]}..."
+            chars_count = len(content)
         else:
             display_content = f"{content}\n\n[Length: {len(content)} chars]"
-        self.clipboard_text.text = display_content
+            chars_count = len(content)
+        self.clipboard_text.append(display_content)
+        self.clipboard_text.append(f"[Length: {chars_count} chars]")
 
         # Update menu
         menu_content = "Commands:\n"
@@ -111,6 +111,7 @@ class TerminalUI:
         self.log_input("Pushing clipboard content...")
         result = push_clipboard_content()
         self.log_input(f"Push Result: {result}")
+        self.update_display()
 
     def view_history(self):
         self.log_input("Retrieving clipboard history...")
@@ -127,6 +128,7 @@ class TerminalUI:
         self.log_input("Clearing clipboard history...")
         result = self.app.clipboard_instance.clear_history()
         self.log_input(f"Result: {result}")
+        self.update_display()
 
     def run(self):
         term = self.term
@@ -227,14 +229,15 @@ def main():
         ui.run()
 
 
-    #except Exception as e:
-    #    print(f"Failed to start application: {str(e)}")
-    #    sys.exit(1)
+    except Exception as e:
+        print(f"Failed to start application: {str(e)}")
+        sys.exit(1)
     finally:
         # Clean up
         try:
             delete_shared_clipboard()
             print("Connection closed.")
+
         except:
             pass
 
