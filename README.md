@@ -1,27 +1,21 @@
-<file_path>
-shared_clipboard_client/README.md
-</file_path>
 
-<edit_description>
-Add project details and usage instructions
-</edit_description>
-
-```
 # Shared Clipboard Client
 
-`shared-clipboard-client` is a command-line tool that allows you to share your clipboard content across multiple devices using a shared clipboard server. It provides a seamless way to synchronize clipboard data, monitor changes, and manage clipboard history.
+### `shared-clipboard-client` is a command-line tool that allows you to share your clipboard content across multiple devices using a shared clipboard server. It provides a seamless way to synchronize clipboard data, monitor changes, and manage clipboard history.
+
+![Screenshot of a terminal.](https://img.cdn1.vip/i/68c2db434f126_1757600579.webp)
 
 ## Features
 
-- **Clipboard Synchronization**: Automatically sync clipboard content across devices.
+- **Clipboard Synchronization**: Automatically sync clipboard content across devices.💻 📱
 - **Terminal UI**: A user-friendly terminal-based interface for managing clipboard operations.
-- **History Management**: View and clear clipboard history.
+- **History Management**: View and clear clipboard history. (Not perfect)
 - **Auto-Push**: Automatically push clipboard changes to the server.
 - **Health Monitoring**: Check the connection status and monitor connected devices.
 
 ## Requirements
 
-- Python 3.13 or higher
+- Python 3.10 or higher
 - Dependencies:
   - `blessed>=1.21.0`
   - `dashing>=0.1.0`
@@ -31,28 +25,30 @@ Add project details and usage instructions
 
 ## Installation
 
+  _Install with `uv`_
+  
 1. Clone the repository:
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/Lin-Jiong-HDU/shared_clipboard_client
    cd shared_clipboard_client
    ```
 
 2. Set up a virtual environment:
    ```bash
-   python -m venv .venv
+   uv venv -p 3.13.3
    source .venv/bin/activate  # On Windows, use `.venv\Scripts\activate`
    ```
 
 3. Install dependencies:
    ```bash
-   pip install -r requirements.txt
+   uv sync
    ```
 
 ## Usage
 
 1. Start the application:
    ```bash
-   python main.py
+   python -m main.py
    ```
 
 2. Use the terminal UI to interact with the shared clipboard:
@@ -62,7 +58,11 @@ Add project details and usage instructions
    - **Clear History**: Clear the clipboard history.
    - **Refresh Status**: Update the connection and device status.
 
-3. Exit the application by selecting the `Exit` option or pressing `q`.
+3. Exit the application by pressing `0`.
+
+> [!IMPORTANT]
+> Please start the shared clipboard server first, then modify the API in `client/api.py`.\
+> Link to shared clipboard server rep [SharedClipboard](https://github.com/Lin-Jiong-HDU/shared_clipboard).
 
 ## Project Structure
 
