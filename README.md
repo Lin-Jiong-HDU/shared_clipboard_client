@@ -1,7 +1,7 @@
 
 # Shared Clipboard Client
 
-### `shared-clipboard-client` is a command-line tool that allows you to share your clipboard content across multiple devices using a shared clipboard server. It provides a seamless way to synchronize clipboard data, monitor changes, and manage clipboard history.
+`shared-clipboard-client` is a command-line tool that allows you to share your clipboard content across multiple devices using a shared clipboard server. It provides a seamless way to synchronize clipboard data, monitor changes, and manage clipboard history.
 
 ![Screenshot of a terminal.](https://img.cdn1.vip/i/68c2db434f126_1757600579.webp)
 
